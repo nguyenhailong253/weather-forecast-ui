@@ -17,8 +17,27 @@ form.addEventListener('submit', function(e) {
     // prevent form default behaviour
     e.preventDefault();
 
-    // Print your input value
-    console.log(cityName);
+    // Make request to API
+    axios.get('http://localhost:3333/weather?city=' + cityName)
+        .then(function(response) {
+            // Select elements
+            let city = document.querySelector('.cityName');
+            let celsius = document.querySelector('.celsius');
+            let fahrenheit = document.querySelector('.fahrenheit');
+            let errorMessage = document.querySelector('.error-message');
+
+            if (response.data.city) {
+                city.innerHTML = 'City: ' + response.data.city;
+                celsius.innerHTML = 'Temperature (C): ' + response.data['temperature (C)'];
+                fahrenheit.innerHTML = 'Temperature (F): ' + response.data['temperature (F)'];
+            } else {
+                errorMessage.innerHTML = "This city is not in our DB";
+            }
+            console.log(response.data);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
 
     // Clear input
     textInput.value = '';
